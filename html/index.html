@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <link href='https://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/styles/style.css">
+    <script src='./autolink.js'></script>
+    <script src='./giphy.js'></script>
+    <script>
+      function getRandomQuote(callback) {
+        get('/random', callback);
+      }
+
+      function updateQuote() {
+        getRandomQuote(function(quote) {
+          document.getElementById('content').innerHTML = quote.quote.autoLink();
+          document.getElementById('author').innerHTML = '- ' + quote.user;
+          // document.getElementById('date').innerHTML = quote.date;
+        });
+      }
+
+      function updateImages() {
+        var offset = Math.floor(Math.random() * 100);
+        var searches = ['love', 'kiss', 'valentines day'];
+        search(searches[Math.floor(Math.random() * searches.length)], 80, offset, function(data) {
+          var images = handleData(data).map(imgToHtml);
+          var container = document.getElementById('photos');
+
+          for (var i = 0; i < images.length; i++) {
+            container.innerHTML += images[i];
+          }
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', updateQuote);
+      document.addEventListener('DOMContentLoaded', updateImages);
+    </script>
+  </head>
+  <body id='photos'>
+    <div class='container'>
+      <span class='quot top'></span>
+      <blockquote id='quote' class='otto'>
+        <p id='content'></p>
+      </blockquote>
+      <span id='author'></span>
+      <span id='date'></span>
+      <input type='submit' onclick='updateQuote(); this.blur()' value='One more!' />
+    </div>
+  </body>
+</html>
